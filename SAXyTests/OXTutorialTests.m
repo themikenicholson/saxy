@@ -59,7 +59,7 @@
     OXmlMapper *mapper = [[OXmlMapper mapper] elements:@[ [OXmlElementMapper rootXPath:@"/tune" type:[CartoonCharacter class]] ]];
     
     OXmlReader *reader = [OXmlReader readerWithMapper:mapper];          //creates a reader based on the mapper
-    
+    reader.context.logReaderStack = YES;
     CartoonCharacter *duck = [reader readXmlText:xml];                  //reads xml
     
     STAssertEqualObjects(@"Daffy", duck.firstName,  @"mapped 'firstName' element to 'firstName' property");  //test results

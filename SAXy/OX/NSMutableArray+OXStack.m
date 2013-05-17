@@ -9,18 +9,18 @@
 
 @implementation NSArray (OXStack)
 
-- (id)peek
+- (id)ox_peek
 {
     return [self lastObject];
 }
 
-- (id)peekAtIndex:(NSInteger)index
+- (id)ox_peekAtIndex:(NSInteger)index
 {   // len:2: revIdx:1 -> idx:0
     NSInteger reverseIndex = [self count] - (index + 1);
     return reverseIndex < 0 ? nil : [self objectAtIndex:reverseIndex];
 }
 
-- (BOOL)isEmpty
+- (BOOL)ox_isEmpty
 {
     return [self count] == 0;
 }
@@ -30,19 +30,19 @@
 
 @implementation NSMutableArray (OXStack)
 
-- (void)push:(id)object
+- (void)ox_push:(id)object
 {
     [self addObject:object];
 }
 
-- (id)pop
+- (id)ox_pop
 {
     id object = [self lastObject];
     [self removeLastObject];
     return object;
 }
 
-- (void)clear
+- (void)ox_clear
 {
     [self removeAllObjects];
 }

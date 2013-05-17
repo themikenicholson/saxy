@@ -29,9 +29,9 @@
 
 - (void)reset
 {
-    [_pathStack clear];
-    [_instanceStack clear];
-    [_mapperStack clear];
+    [_pathStack ox_clear];
+    [_instanceStack ox_clear];
+    [_mapperStack ox_clear];
     _currentMapper = nil;
     _result = nil;
 }

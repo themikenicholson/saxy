@@ -100,9 +100,9 @@ static NSArray *_OXPathTypeArray;
         [scanner scanString:separator intoString:&sep];
         //NSLog(@"token:%@ %@, location:%d", token ? token : @"", sep ? sep : @"", [scanner scanLocation]);
         if (token)
-            [tempStack push:token];
+            [tempStack ox_push:token];
         if (sep)
-            [tempStack push:sep];
+            [tempStack ox_push:sep];
         token = nil;
         sep = nil;
     }
@@ -121,14 +121,14 @@ static NSArray *_OXPathTypeArray;
         BOOL isSep1 = [separator isEqualToString:tok1];
         BOOL isSep2 = [separator isEqualToString:tok2];
         if (isSep1 && isSep2) {                             //xpath double wildcard
-            [__tagStack push:@"**"];
-            [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXAnyAnyPathType]];
+            [__tagStack ox_push:@"**"];
+            [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXAnyAnyPathType]];
             tok1 = [tokenEnumerator nextObject];            //consume both tokens
             tok2 = [tokenEnumerator nextObject];
         } else if (isSep1) {                                
             if (isRoot) {                                   //root node
-                [__tagStack push:OX_ROOT_PATH];
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXRootPathType]];
+                [__tagStack ox_push:OX_ROOT_PATH];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXRootPathType]];
                 tok1 = tok2;
                 tok2 = [tokenEnumerator nextObject];
             } else {                                        //non-root separators - ignore
@@ -137,21 +137,21 @@ static NSArray *_OXPathTypeArray;
             }
         } else {                                            //none-separator token
             if ([tok1 isEqualToString:@"*"]) {              //wildcard
-                [__tagStack push:@"*"];
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXAnyPathType]];
+                [__tagStack ox_push:@"*"];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXAnyPathType]];
             } else if ([tok1 isEqualToString:@"**"]) {  //text node
-                [__tagStack push:@"**"];
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXAnyAnyPathType]];
+                [__tagStack ox_push:@"**"];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXAnyAnyPathType]];
             } else if ([tok1 hasPrefix:@"@"]) {              //attribute
                 NSString *attr = [tok1 substringWithRange:NSMakeRange(1,[tok1 length]-1)];
-                [__tagStack push:attr];
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXAttributePathType]];
+                [__tagStack ox_push:attr];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXAttributePathType]];
             } else if ([tok1 isEqualToString:@"text()"]) {  //text node
-                [__tagStack push:@"."];
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXTextPathType]];
+                [__tagStack ox_push:@"."];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXTextPathType]];
             } else {                                        //element token
-                [__tagStack push:tok1];          
-                [__tagTypeStack push:[_OXPathTypeArray objectAtIndex:OXElementPathType]];
+                [__tagStack ox_push:tok1];
+                [__tagTypeStack ox_push:[_OXPathTypeArray objectAtIndex:OXElementPathType]];
             }
             tok1 = tok2;
             tok2 = [tokenEnumerator nextObject];

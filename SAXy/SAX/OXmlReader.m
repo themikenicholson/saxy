@@ -127,7 +127,7 @@
 - (OXPathMapper *)bestMatchMapper:(NSString *)elementName nsPrefix:(NSString *)nsPrefix
 {
     //give priority to mapped properties of elementMappers on the stack:
-    OXmlElementMapper *elementMapper = [_context.mapperStack isEmpty] ? nil : [_context.mapperStack peek];
+    OXmlElementMapper *elementMapper = [_context.mapperStack ox_isEmpty] ? nil : [_context.mapperStack ox_peek];
     OXmlXPathMapper *xpathMapper = elementMapper ? [elementMapper matchPathStack:_context.pathStack forNSPrefix:nsPrefix] : nil;
     if (xpathMapper) {
         if (xpathMapper.toType.typeEnum == OX_COMPLEX) {
@@ -156,12 +156,12 @@
 - (void)parserDidStartDocument:(NSXMLParser *)parser
 {
     _logStack = _context.logReaderStack;    //set logging flag
-    [_context.pathStack push:OX_ROOT_PATH ];
+    [_context.pathStack ox_push:OX_ROOT_PATH ];
     OXmlElementMapper *mapper = [_mapper matchElement:_context nsPrefix:nil];
     if (mapper && mapper.mapperEnum == OX_COMPLEX_MAPPER) {
         NSObject *targetObj = mapper.factory(OX_ROOT_PATH, _context);// [[objectClass alloc] init];
-        [_context.instanceStack push:targetObj];
-        [_context.mapperStack push:mapper];
+        [_context.instanceStack ox_push:targetObj];
+        [_context.mapperStack ox_push:mapper];
         [_context pushMappingType:OX_SAX_OBJECT_ACTION];
         if (_logStack) NSLog(@"start: %@ - construct/push: %@", [_context tagPath], targetObj);
     } else {
@@ -172,7 +172,7 @@
 - (void)parserDidEndDocument:(NSXMLParser *)parser
 {
     //NSString *docTag = [_context.pathStack peek];
-    NSAssert1([OX_ROOT_PATH isEqualToString:[_context.pathStack peek]], @"ERROR in parserDidEndDocument: bottom of context.pathStack should contain '/', not %@", [_context.pathStack peek]);
+    NSAssert1([OX_ROOT_PATH isEqualToString:[_context.pathStack ox_peek]], @"ERROR in parserDidEndDocument: bottom of context.pathStack should contain '/', not %@", [_context.pathStack ox_peek]);
     if (_logStack) NSLog(@"  end: %@ - skipping", [_context tagPath]);
 }
 
@@ -194,8 +194,8 @@
 //            if ([@"c:homePage" isEqualToString:tag])
 //                NSLog(@"link: %@",tag);
             //put tag on the stack
-            [_context.pathStack push:elementName];
-            OXmlElementMapper *parentMapper = [_context.mapperStack peek];
+            [_context.pathStack ox_push:elementName];
+            OXmlElementMapper *parentMapper = [_context.mapperStack ox_peek];
             BOOL skipElement = parentMapper ? [parentMapper.ignoreProperties containsObject:elementName] : NO;
             OXPathMapper *mapper = nil;
             if (!skipElement) {
@@ -208,14 +208,14 @@
             } else {
                 _context.currentMapper = mapper;    //needed by blocks
                 //get parrent object
-                NSObject *targetObj = [_context.instanceStack peek];
+                NSObject *targetObj = [_context.instanceStack ox_peek];
                 if (mapper.mapperEnum == OX_COMPLEX_MAPPER) {
                     //create new instance and push on the stack
                     if ( ! mapper.factory)
                         NSAssert1(NO, @"factory block should never be nil, assignDefaultBlocks:context not being called for tag: %@", elementName);
                     targetObj = mapper.factory(elementName, _context);// [[objectClass alloc] init];
-                    [_context.instanceStack push:targetObj];
-                    [_context.mapperStack push:mapper];
+                    [_context.instanceStack ox_push:targetObj];
+                    [_context.mapperStack ox_push:mapper];
                     [_context pushMappingType:OX_SAX_OBJECT_ACTION];
                     if (_logStack) NSLog(@"start: %@ - construct/push: %@", [_context tagPath], targetObj);
                     //process attributes
@@ -281,15 +281,15 @@
             NSString *elementName = colon.location == NSNotFound ? tag : [self removeTagPrefix:tag];
             NSString *nsPrefix = colon.location == NSNotFound ? OX_DEFAULT_NAMESPACE : [self namespacePrefix:tag];
             //get object off the top of stack and process according to mapping type
-            NSObject *targetObj = [_context.instanceStack peek];
-            OXmlElementMapper *elementMapper = [_context.mapperStack peek];
-//            NSString *parentElement = [_context.pathStack peekAtIndex:1];
+            NSObject *targetObj = [_context.instanceStack ox_peek];
+            OXmlElementMapper *elementMapper = [_context.mapperStack ox_peek];
+//            NSString *parentElement = [_context.pathStack ox_peekAtIndex:1];
             if (elementMapper == nil)
-                NSAssert1(elementMapper != nil, @"no OXmlElementMapper found for %@", [_context.pathStack peekAtIndex:1]);
+                NSAssert1(elementMapper != nil, @"no OXmlElementMapper found for %@", [_context.pathStack ox_peekAtIndex:1]);
             if (mappingType == OX_SAX_OBJECT_ACTION) {
-                OXmlElementMapper *parentMapper = [_context.mapperStack peekAtIndex:1];
+                OXmlElementMapper *parentMapper = [_context.mapperStack ox_peekAtIndex:1];
                 NSObject *child = targetObj;
-                NSObject *parent = [_context.instanceStack peekAtIndex:1];
+                NSObject *parent = [_context.instanceStack ox_peekAtIndex:1];
                 //possible text node value
                 NSString *bodyText = _context.elementFilterBlock(nil, [_context text]);
                 if (bodyText) {
@@ -317,8 +317,8 @@
                 } else {
                     NSAssert4(NO, @"ERROR: no registered OXmlXPathMapper: %@ - %@.%@ =' %@'", [_context tagPath], parent, @"?", child);
                 }
-                [_context.instanceStack pop];
-                [_context.mapperStack pop];
+                [_context.instanceStack ox_pop];
+                [_context.mapperStack ox_pop];
             } else if (mappingType == OX_SAX_VALUE_ACTION) {
                 //text node value
                 NSString *elementText = _context.elementFilterBlock(elementName, [_context text]);
@@ -336,7 +336,7 @@
         }
         [_context clearText]; //reset body string
         [_context popMappingType];
-        [_context.pathStack pop];
+        [_context.pathStack ox_pop];
     }
 }
 

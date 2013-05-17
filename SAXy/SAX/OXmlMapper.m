@@ -138,7 +138,7 @@
 {
     NSDictionary *singleMapper = nsPrefix ? [_elementMappersByNSURI objectForKey:nsPrefix] : nil;
     NSArray *nsList = (singleMapper == nil) ? [_elementMappersByNSURI allValues] : ( singleMapper ? @[ singleMapper ] : @[]);
-    NSString *tag = [stack peek];
+    NSString *tag = [stack ox_peek];
     for(NSDictionary *mapperNS in nsList) {
         OXmlElementMapper *mapper = [mapperNS objectForKey:tag];
         while (mapper) {

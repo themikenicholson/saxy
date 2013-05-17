@@ -635,7 +635,7 @@
 - (OXmlXPathMapper *)matchPathStack:(NSArray *)tagStack forNSPrefix:(NSString *)nsPrefix
 {
     NSString *nsURI = nsPrefix ? [_parentMapper.nsByPrefix objectForKey:nsPrefix] : nil;
-    NSString *leaf = [tagStack peek];
+    NSString *leaf = [tagStack ox_peek];
     OXmlXPathMapper *mapper = [self elementMapperByTag:leaf nsURI:nsURI];
     while (mapper) {
         const OXPathLite *xpath = mapper.xpath;     //may be nil, xpath only created for complex paths

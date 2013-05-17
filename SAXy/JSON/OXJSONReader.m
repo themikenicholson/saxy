@@ -75,13 +75,13 @@
     }
     id parent = nil;
     if (objMapper) {
-        [_context.mapperStack push:objMapper];
+        [_context.mapperStack ox_push:objMapper];
         _context.currentMapper = objMapper;
         if (objMapper.factory == nil)
             NSAssert1(objMapper.factory, @"ERROR: factory is not set for OXJSONObjectMapper: %@", objMapper);
         parent = objMapper.factory(objMapper.toPath, _context);
         if (_logMapping) NSLog(@"create %@ - %@", objMapper.fromPath, NSStringFromClass([parent class]));
-        [_context.instanceStack push:parent];
+        [_context.instanceStack ox_push:parent];
         for(NSString *propertyKey in objMapper.orderedPropertyKeys) {
             if ([propertyKey hasSuffix:@"website"])
                 NSLog(@"website");
@@ -173,8 +173,8 @@
         }
     }
     if (objMapper) {
-        [_context.instanceStack pop];
-        [_context.mapperStack pop];
+        [_context.instanceStack ox_pop];
+        [_context.mapperStack ox_pop];
     }
     return parent;
 }

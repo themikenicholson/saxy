@@ -13,17 +13,17 @@
 
 @interface NSArray (OXStack)
 
-- (id)peek;
-- (id)peekAtIndex:(NSInteger)index;     //index is reverse that of objectAtIndex method: arrayIndex = [array count] - (index + 1)
-- (BOOL)isEmpty;
+- (id)ox_peek;
+- (id)ox_peekAtIndex:(NSInteger)index;     //index is reverse that of objectAtIndex method: arrayIndex = [array count] - (index + 1)
+- (BOOL)ox_isEmpty;
 
 @end
 
 @interface NSMutableArray (OXStack)
 
-- (void)push:(id)object;
-- (id)pop;
-- (void)clear;
+- (void)ox_push:(id)object;
+- (id)ox_pop;
+- (void)ox_clear;
 
 @end
 

@@ -56,7 +56,7 @@ static NSArray *_mappingTypeWrappers;
 - (void)reset
 {
     [super reset];
-    [_mappingTypeStack clear];
+    [_mappingTypeStack ox_clear];
     [self clearText];
 }
 
@@ -134,7 +134,7 @@ static NSArray *_mappingTypeWrappers;
 {
     OXmlContext *ctx = [[OXmlContext alloc] init];
     for(NSString *tag in tagStack) {
-        [ctx.pathStack push:tag];
+        [ctx.pathStack ox_push:tag];
     }
     return ctx;
 }
